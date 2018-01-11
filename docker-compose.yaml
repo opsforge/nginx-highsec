@@ -1,0 +1,41 @@
+version: '2'
+services:
+  nginx-highsec:
+    restart: unless-stopped
+    image: opsforge/nginx-highsec:latest
+    ports:
+      # For production, change to 80:80 and 443:443 - or if you are behind a load balancer make sure that listens on both / in that case any host port can be used.
+      - 80:80
+      - 443:443
+    environment:
+      SERVER_NAME: "mydomain.com"
+      CSP_HEADERS: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://ssl.google-analytics.com https://connect.facebook.net; img-src 'self' https://ssl.google-analytics.com https://s-static.ak.facebook.com ; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://themes.googleusercontent.com; frame-src https://www.facebook.com https://s-static.ak.facebook.com; object-src 'none'"
+      SPKI_HEADERS: "pin-sha256='SSL_CERT_SHA'; pin-sha256='FIRST_CSR_SHA'; pin-sha256='SECOND_CSR_SHA'; max-age=31536000; includeSubdomains; always"
+      SSL_CERT_NAME: mydomain.com.pem
+      SSL_KEY_NAME: mydomain.com.key
+      SSL_DH_NAME: mydomain.com.dhparam.pem
+      PROXY_TO: web
+      PROXY_PORT: "80"
+      PROXY_PROTOCOL: http
+      DEFCONF: highsec_nowww_proxy.conf
+    volumes:
+      - ./mydomain.com.pem:/etc/nginx/ssl/mydomain.com.pem
+      - ./mydomain.com.key:/etc/nginx/ssl/mydomain.com.key
+      - ./mydomain.com.dhparam.pem:/etc/nginx/ssl/mydomain.com.pem
+    networks:
+      - highsec
+  some-web-service:
+    restart: unless-stopped
+    image: some-web-service
+    expose:
+      - 80
+      #or whatever the port is
+    volumes:
+      - ./data:/var/www/html
+      #or wherever the data is
+    networks:
+      highsec:
+        aliases:
+          - web
+networks:
+  higsec:
