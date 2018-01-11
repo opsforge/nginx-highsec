@@ -16,6 +16,7 @@ ENV SSL_CERT_NAME="mydomain.com.pem"
 ENV SSL_KEY_NAME="mydomain.com.key"
 ENV SSL_DH_NAME="mydomain.com.dhparam.pem"
 ENV DEFCONF="highsec.conf"
+ENV PROXY_URL="/"
 ENV PROXY_TO="web"
 ENV PROXY_PORT="80"
 ENV PROXY_PROTOCOL="http"
@@ -31,4 +32,4 @@ COPY highsec.conf /opt/highsec/
 # ENV DEFCONF="highsec.conf"
 
 # FOR WWW STRIPPING WITH PROXYING>>>
-CMD /bin/bash -c "chmod 0400 /etc/nginx/ssl/* && envsubst '\$SERVER_NAME \$CSP_HEADERS \$SPKI_HEADERS \$SSL_CERT_NAME \$SSL_KEY_NAME \$SSL_DH_NAME \$DEFCONF \$PROXY_TO \$PROXY_PORT \$PROXY_PROTOCOL' < /opt/highsec/${DEFCONF} > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
+CMD /bin/bash -c "chmod 0400 /etc/nginx/ssl/* && envsubst '\$SERVER_NAME \$CSP_HEADERS \$SPKI_HEADERS \$SSL_CERT_NAME \$SSL_KEY_NAME \$SSL_DH_NAME \$DEFCONF \$PROXY_URL \$PROXY_TO \$PROXY_PORT \$PROXY_PROTOCOL' < /opt/highsec/${DEFCONF} > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
