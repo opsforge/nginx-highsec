@@ -2,11 +2,11 @@
 # Based on https://github.com/jamessharp/docker-nginx-https-redirect by jamessharp - Kudos
 # Much of the config is sampled from https://gist.github.com/plentz/6737338
 
-FROM nginx:1.13
+FROM nginx:1.15
 
 MAINTAINER opsforge.io
 LABEL name="nginx-highsec"
-LABEL version="1.1.0"
+LABEL version="1.2.0"
 
 # You'll need to supply all these via run or compose env vars!
 ENV SERVER_NAME="mydomain.com"
